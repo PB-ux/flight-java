@@ -1,0 +1,47 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://lab.com/flight"
+           targetNamespace="http://lab.com/flight" elementFormDefault="qualified">
+
+    <xs:complexType name="flight">
+        <xs:sequence>
+            <xs:element name="flightId" type="xs:int"/>
+            <xs:element name="departureDate" type="xs:date"/>
+            <xs:element name="availableSeats" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="createFlightRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="flightId" type="xs:int" />
+                <xs:element name="departureDate" type="xs:date"/>
+                <xs:element name="availableSeats" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="createFlightResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="flight" type="tns:flight"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="checkFlightAvailabilityRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="flightId" type="xs:int"/>
+                <xs:element name="departureDate" type="xs:date"/>
+                <xs:element name="flights" type="tns:flight" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="checkFlightAvailabilityResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="status" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
