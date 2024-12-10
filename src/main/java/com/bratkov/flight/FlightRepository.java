@@ -1,34 +1,54 @@
 package com.bratkov.flight;
 
 import com.lab.flight.Flight;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class FlightRepository {
-    public Flight create(Integer flightId, XMLGregorianCalendar departureDate, Integer availableSeats) {
-        Assert.notNull(flightId, "The flight id must not be null");
-        Assert.notNull(departureDate, "The departure date must not be null");
-        Assert.notNull(availableSeats, "The available seats must not be null");
+    private static Flight[] flights;
 
-        Flight newFlight = new Flight();
-        newFlight.setFlightId(flightId);
-        newFlight.setDepartureDate(departureDate);
-        newFlight.setAvailableSeats(availableSeats);
+    @PostConstruct
+    public void initData() throws DatatypeConfigurationException {
+        flights = new Flight[2];
 
-        return newFlight;
-    };
+        Flight flightParis = new Flight();
+        String dateValue = "2024-12-10"; // Дата в формате xs:date
+        XMLGregorianCalendar departureDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateValue);
+        flightParis.setFlightId(1);
+        flightParis.setDepartureDate(departureDate);
+        flightParis.setAvailableSeats(20);
+        flightParis.setDeparturePoint("Paris");
+        flights[0] = flightParis;
 
-    public String checkFlightAvailable(List<Flight> flights, Integer flightId, XMLGregorianCalendar departureDate) {
-        Optional<Flight> flight = flights.stream()
-                .filter(f -> f.getFlightId() == flightId && f.getDepartureDate().equals(departureDate))
-                .findFirst();
-
-        return flight.isPresent() ? "Flight is available" : "Flight is not available";
+        Flight flightItaly = new Flight();
+        String dateValue2 = "2024-12-11"; // Дата в формате xs:date
+        XMLGregorianCalendar departureDate2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateValue);
+        flightItaly.setFlightId(2);
+        flightItaly.setDepartureDate(departureDate2);
+        flightItaly.setAvailableSeats(0);
+        flightItaly.setDeparturePoint("Italy");
+        flights[1] = flightItaly;
     }
 
+    public Flight[] getAvailableFlights(XMLGregorianCalendar departureDate, String departurePoint) {
+        Assert.notNull(departureDate, "The departureDate must not be null");
+        Assert.notNull(departurePoint, "The departurePoint must not be null");
+
+        List<Flight> availableFlights = new ArrayList<>();
+
+        for (Flight flight : flights) {
+            if (departureDate.equals(flight.getDepartureDate()) && departurePoint.equalsIgnoreCase(flight.getDeparturePoint()) && flight.getAvailableSeats() > 0) {
+                availableFlights.add(flight);
+            }
+        }
+
+        return availableFlights.toArray(new Flight[0]);
+    }
 }

@@ -7,6 +7,8 @@ import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
+import java.util.Arrays;
+
 @Endpoint
 public class FlightEndpoint {
     private static final String NAMESPACE_URI = "http://lab.com/flight";
@@ -18,23 +20,12 @@ public class FlightEndpoint {
         this.flightRepository = flightRepository;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "createFlightRequest")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getAvailableFlightsRequest")
     @ResponsePayload
-    public CreateFlightResponse createFlight(@RequestPayload CreateFlightRequest request) {
-        CreateFlightResponse response = new CreateFlightResponse();
-        Flight newFlight = flightRepository.create(request.getFlightId(), request.getDepartureDate(), request.getAvailableSeats());
-        response.setFlight(newFlight);
-
-        return response;
-    }
-
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "checkFlightAvailable")
-    @ResponsePayload
-    public CheckFlightAvailabilityResponse checkFlightAvailable(@RequestPayload CheckFlightAvailabilityRequest request) {
-        CheckFlightAvailabilityResponse response = new CheckFlightAvailabilityResponse();
-        String status = flightRepository.checkFlightAvailable(request.getFlights(), request.getFlightId(), request.getDepartureDate());
-
-        response.setStatus(status);
+    public GetAvailableFlightsResponse getAvailableFlights(@RequestPayload GetAvailableFlightsRequest request) {
+        GetAvailableFlightsResponse response = new GetAvailableFlightsResponse();
+        Flight[] flights = flightRepository.getAvailableFlights(request.getDepartureDate(), request.getDeparturePoint());
+        response.getFlight().addAll(Arrays.asList(flights));
 
         return response;
     }
