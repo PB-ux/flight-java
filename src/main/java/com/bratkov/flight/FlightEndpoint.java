@@ -20,6 +20,16 @@ public class FlightEndpoint {
         this.flightRepository = flightRepository;
     }
 
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getFlights")
+    @ResponsePayload
+    public GetFlightsResponse getFlights(@RequestPayload GetFlightsRequest request) {
+        GetFlightsResponse response = new GetFlightsResponse();
+        Flight[] flights = flightRepository.getFlights();
+        response.getFlight().addAll(Arrays.asList(flights));
+
+        return response;
+    }
+
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getAvailableFlightsRequest")
     @ResponsePayload
     public GetAvailableFlightsResponse getAvailableFlights(@RequestPayload GetAvailableFlightsRequest request) {

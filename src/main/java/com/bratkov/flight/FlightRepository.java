@@ -37,6 +37,10 @@ public class FlightRepository {
         flights[1] = flightItaly;
     }
 
+    public Flight[] getFlights() {
+        return flights;
+    }
+
     public Flight[] getAvailableFlights(XMLGregorianCalendar departureDate, String departurePoint) {
         Assert.notNull(departureDate, "The departureDate must not be null");
         Assert.notNull(departurePoint, "The departurePoint must not be null");
