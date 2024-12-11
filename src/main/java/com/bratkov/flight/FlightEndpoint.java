@@ -20,7 +20,7 @@ public class FlightEndpoint {
         this.flightRepository = flightRepository;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getFlights")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getFlightsRequest")
     @ResponsePayload
     public GetFlightsResponse getFlights(@RequestPayload GetFlightsRequest request) {
         GetFlightsResponse response = new GetFlightsResponse();
